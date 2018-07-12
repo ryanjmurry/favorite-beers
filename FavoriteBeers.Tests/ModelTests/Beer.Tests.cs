@@ -58,12 +58,34 @@ namespace FavoriteBeers.Tests
         }
 
         [TestMethod]
-        public void Find_FindsItemInDatabase_Beer()
+        public void Find_FindsBeerInDatabase_Beer()
         {
             Beer testBeer = new Beer(1, "Tecate", "Lager", 4.5, 15);
             testBeer.Save();
             Beer foundBeer = Beer.FindBeer(testBeer.Id);
             Assert.AreEqual(testBeer, foundBeer);
+        }
+
+        [TestMethod]
+        public void Update_UpdatesBeerInDatabase_String()
+        {
+            Beer testBeer = new Beer(1, "Tecate", "Lager", 4.5, 15);
+            testBeer.Save();
+            testBeer.Update(1, "Coors", "Lager", 4.5, 15);
+            string result = Beer.FindBeer(testBeer.Id).Name;
+            Console.WriteLine(result);
+            Assert.AreEqual("Coors", result);
+        }
+
+        [TestMethod]
+        public void Delete_DeletesBeerInDatabase_BeerList()
+        {
+            Beer testBeer = new Beer(1, "Tecate", "Lager", 4.5, 15);
+            testBeer.Save();
+            testBeer.Delete();
+            List<Beer> resultList = Beer.GetAll();
+            List<Beer> testList = new List<Beer> { };
+            CollectionAssert.AreEqual(testList, resultList);
         }
     }
 }

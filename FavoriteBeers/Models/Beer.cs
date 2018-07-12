@@ -92,7 +92,6 @@ namespace FavoriteBeers.Models
         {
             MySqlConnection conn = DB.Connection();
             conn.Open();
-
             MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
             cmd.CommandText = @"DELETE FROM beers;";
 
@@ -166,5 +165,51 @@ namespace FavoriteBeers.Models
             }
             return foundBeer;
         }
+
+        public void Update(int breweryId, string beerName, string beerStyle, double beerABV, int beerIBU)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"UPDATE beers SET brewery_id = @breweryId, name = @beerName, style = @beerStyle, abv = @beerABV, ibu = @beerIBU WHERE id = @searchId;";
+
+            cmd.Parameters.AddWithValue("@breweryId", breweryId);
+            cmd.Parameters.AddWithValue("@beerName", beerName);
+            cmd.Parameters.AddWithValue("@beerStyle", beerStyle);
+            cmd.Parameters.AddWithValue("@beerABV", beerABV);
+            cmd.Parameters.AddWithValue("@beerIBU", beerIBU);
+            cmd.Parameters.AddWithValue("@searchId", this.Id);
+
+            cmd.ExecuteNonQuery();
+            BreweryId = breweryId;
+            Name = beerName;
+            Style = beerStyle;
+            ABV = beerABV;
+            IBU = beerIBU;
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        }
+
+        public void Delete()
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"DELETE FROM beers WHERE id = @thisId;";
+
+            cmd.Parameters.AddWithValue("@thisId", this.Id);
+
+            cmd.ExecuteNonQuery();
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+        } 
     }
 }
