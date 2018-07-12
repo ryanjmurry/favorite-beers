@@ -100,5 +100,37 @@ namespace FavoriteBeers.Models
                 conn.Dispose();
             }
         }
+
+        public static Brewery FindBrewery(int id)
+        {
+            MySqlConnection conn = DB.Connection();
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+            cmd.CommandText = @"SELECT * FROM breweries WHERE id = @thisId;";
+            cmd.Parameters.AddWithValue("@thisId", id);
+            MySqlDataReader rdr = cmd.ExecuteReader() as MySqlDataReader;
+
+            string breweryName = "";
+            string breweryCity = "";
+            string breweryState = "";
+            int breweryId = 0;
+
+            while (rdr.Read())
+            {
+                breweryName = rdr.GetString(0);
+                breweryCity = rdr.GetString(1);
+                breweryState = rdr.GetString(2);
+                breweryId = rdr.GetInt32(3);
+            }
+
+            Brewery foundBrewery = new Brewery(breweryName, breweryCity, breweryState, breweryId);
+
+            conn.Close();
+            if (conn != null)
+            {
+                conn.Dispose();
+            }
+            return foundBrewery;
+        }
     }
 }

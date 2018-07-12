@@ -45,5 +45,40 @@ namespace FavoriteBeers.Tests
             List<Brewery> result = Brewery.GetAll();
             CollectionAssert.AreEqual(testList, result);
         }
+
+        [TestMethod]
+        public void Save_AssignsIdToObject_Id()
+        {
+            Brewery testBrewery = new Brewery("Enegren", "Moorpark", "CA");
+            testBrewery.Save();
+            Brewery savedBrewery = Brewery.GetAll()[0];
+            int testId = testBrewery.Id;
+            int result = savedBrewery.Id;
+            Assert.AreEqual(testId, result);
+        }
+
+        [TestMethod]
+        public void DeleteAll_DeletesAllBreweriesFromDatabase_BreweryList()
+        {
+            Brewery newBrewery1 = new Brewery("Enegren", "Moorpark", "CA");
+            Brewery newBrewery2 = new Brewery("Elysian", "Seattle", "WA");
+            newBrewery1.Save();
+            newBrewery2.Save();
+            Brewery.DeleteAll();
+            List<Brewery> testList = new List<Brewery> { };
+            List<Brewery> result = Brewery.GetAll();
+            CollectionAssert.AreEqual(testList, result);
+        }
+
+        [TestMethod]
+        public void FindBrewery_FindsBreweryInDatabase_Brewery()
+        {
+            Brewery newBrewery = new Brewery("Enegren", "Moorpark", "CA");
+            newBrewery.Save();
+            Brewery foundBrewery = Brewery.FindBrewery(newBrewery.Id);
+            Assert.AreEqual(newBrewery, foundBrewery);
+        }
+
+
     }
 }
